@@ -61,28 +61,38 @@ export const MapScreen = () => {
 
   }, []);
 
-  
+
   if (loading) {
     return <Text>Data Loading...</Text>
-  }else{
-  
-    let parkeerplaatsen = articles.map((val , key) => {
-      return <View key={key}>
-         <MapView style={{ width: "100%", height:"90%" , marginTop:40}}>
-      <Marker key="Marker1"
-      coordinate={ {latitude: val.Latitude , longitude: val.Longitude} }
-      title={val.Naam}
-      description={val.Gemeente +" "+ val.District +" "+ val.Postcode  } >
-      </Marker>
-    </MapView>
-      </View>
-    })
-    return<View>
-        {parkeerplaatsen}
-  </View>
-  
+  } else {
+    return (
+      <View>
+        <MapView style={{ width: "100%", height: "90%", marginTop: 40 }} region={{
+          latitude: 51.260197,
+          longitude: 4.402771,
+          latitudeDelta: 0.5,
+          longitudeDelta: 0.5
+        }}>
+          {articles.map(val => {
+           
+            return<Marker
+              key={val.Naam}
+              coordinate={{ latitude: val.Latitude , longitude: val.Longitude }}
+              title = {val.Naam}
+              description= {val.Gemeente + " " + val.District + " " + val.Postcode} />
+
+          })}
+          <Marker
+            key="Marker1"
+            coordinate={{ latitude: 50.814604, longitude: 4.386932 }}
+            title="AP Hogeschool"
+            description="Hier zijn we"
+          />
+        </MapView>
+      </View>)
+
   }
-  }
+}
 
 export const ListScreen = () => {
   return (
@@ -92,7 +102,7 @@ export const ListScreen = () => {
   )
 }
 
- 
+
 export default function App() {
 
 
