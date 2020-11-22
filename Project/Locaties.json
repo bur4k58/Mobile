@@ -1,269 +1,373 @@
 {
-    "displayFieldName": "Naam",
-    "fieldAliases": {
-      "OBJECTID": "OBJECTID",
-      "Naam": "Naam",
-      "Gemeente": "Gemeente",
-      "District": "District",
-      "Postcode": "Postcode",
-      "Longitude": "Longitude",
-      "Latitude": "Latitude"
+  "displayFieldName": "Naam",
+  "fieldAliases": {
+    "OBJECTID": "OBJECTID",
+    "Naam": "Naam",
+    "Gemeente": "Gemeente",
+    "District": "District",
+    "Postcode": "Postcode",
+    "Tramlijnen": "Tramlijnen",
+    "Buslijnen": "Buslijnen",
+    "Longitude": "Longitude",
+    "Latitude": "Latitude",
+    "GISID": "GISID",
+    "Plaatsen": "Plaatsen",
+    "GEBRUIK": "GEBRUIK"
+  },
+  "geometryType": "esriGeometryPoint",
+  "spatialReference": {
+    "wkid": 4326,
+    "latestWkid": 4326
+  },
+  "fields": [
+    {
+      "name": "OBJECTID",
+      "type": "esriFieldTypeOID",
+      "alias": "OBJECTID"
     },
-    "geometryType": "esriGeometryPoint",
-    "spatialReference": {
-      "wkid": 4326,
-      "latestWkid": 4326
+    {
+      "name": "Naam",
+      "type": "esriFieldTypeString",
+      "alias": "Naam",
+      "length": 50
     },
-    "fields": [
-      {
-        "name": "OBJECTID",
-        "type": "esriFieldTypeOID",
-        "alias": "OBJECTID"
+    {
+      "name": "Gemeente",
+      "type": "esriFieldTypeString",
+      "alias": "Gemeente",
+      "length": 50
+    },
+    {
+      "name": "District",
+      "type": "esriFieldTypeString",
+      "alias": "District",
+      "length": 50
+    },
+    {
+      "name": "Postcode",
+      "type": "esriFieldTypeInteger",
+      "alias": "Postcode"
+    },
+    {
+      "name": "Tramlijnen",
+      "type": "esriFieldTypeString",
+      "alias": "Tramlijnen",
+      "length": 50
+    },
+    {
+      "name": "Buslijnen",
+      "type": "esriFieldTypeString",
+      "alias": "Buslijnen",
+      "length": 150
+    },
+    {
+      "name": "Longitude",
+      "type": "esriFieldTypeDouble",
+      "alias": "Longitude"
+    },
+    {
+      "name": "Latitude",
+      "type": "esriFieldTypeDouble",
+      "alias": "Latitude"
+    },
+    {
+      "name": "GISID",
+      "type": "esriFieldTypeString",
+      "alias": "GISID",
+      "length": 20
+    },
+    {
+      "name": "Plaatsen",
+      "type": "esriFieldTypeSmallInteger",
+      "alias": "Plaatsen"
+    },
+    {
+      "name": "GEBRUIK",
+      "type": "esriFieldTypeString",
+      "alias": "GEBRUIK",
+      "length": 50
+    }
+  ],
+  "features": [
+    {
+      "attributes": {
+        "OBJECTID": 5008,
+        "Naam": "Park&Ride Schoonselhof",
+        "Gemeente": "Antwerpen",
+        "District": "Hoboken",
+        "Postcode": 2660,
+        "Tramlijnen": "10",
+        "Buslijnen": "141 - 290 - 295",
+        "Longitude": 4.36396024,
+        "Latitude": 51.16999296,
+        "GISID": "PARKRIDE00003",
+        "Plaatsen": 116,
+        "GEBRUIK": "bestaand"
       },
-      {
-        "name": "Naam",
-        "type": "esriFieldTypeString",
-        "alias": "Naam",
-        "length": 50
-      },
-      {
-        "name": "Gemeente",
-        "type": "esriFieldTypeString",
-        "alias": "Gemeente",
-        "length": 50
-      },
-      {
-        "name": "District",
-        "type": "esriFieldTypeString",
-        "alias": "District",
-        "length": 50
-      },
-      {
-        "name": "Postcode",
-        "type": "esriFieldTypeInteger",
-        "alias": "Postcode"
-      },
-      {
-        "name": "Longitude",
-        "type": "esriFieldTypeDouble",
-        "alias": "Longitude"
-      },
-      {
-        "name": "Latitude",
-        "type": "esriFieldTypeDouble",
-        "alias": "Latitude"
+      "geometry": {
+        "x": 4.365230669624637,
+        "y": 51.1694575124799
       }
-    ],
-    "features": [
-      {
-        "attributes": {
-          "OBJECTID": 5008,
-          "Naam": "Park&Ride Schoonselhof",
-          "Gemeente": "Antwerpen",
-          "District": "Hoboken",
-          "Postcode": 2660,
-          "Longitude": 4.36396024,
-          "Latitude": 51.16999296
-        },
-        "geometry": {
-          "x": 4.365230669624637,
-          "y": 51.1694575124799
-        }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5009,
+        "Naam": "Park&Ride Olympiade",
+        "Gemeente": "Antwerpen",
+        "District": "Wilrijk",
+        "Postcode": 2610,
+        "Tramlijnen": "2 - 6",
+        "Buslijnen": "180 - 181 - 182 - 183",
+        "Longitude": 4.39051461,
+        "Latitude": 51.18403559,
+        "GISID": "PARKRIDE00004",
+        "Plaatsen": 195,
+        "GEBRUIK": "bestaand"
       },
-      {
-        "attributes": {
-          "OBJECTID": 5009,
-          "Naam": "Park&Ride Olympiade",
-          "Gemeente": "Antwerpen",
-          "District": "Wilrijk",
-          "Postcode": 2610,
-          "Longitude": 4.39051461,
-          "Latitude": 51.18403559
-        },
-        "geometry": {
-          "x": 4.391786010699708,
-          "y": 51.183500395677925
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5010,
-          "Naam": "Park&Ride Boechout",
-          "Gemeente": "Boechout",
-          "District": null,
-          "Postcode": 2530,
-          "Longitude": 4.49263804,
-          "Latitude": 51.16942712
-        },
-        "geometry": {
-          "x": 4.493912131747247,
-          "y": 51.16889089313977
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5011,
-          "Naam": "Park&Ride Blancefloer 3",
-          "Gemeente": "Antwerpen",
-          "District": "Antwerpen",
-          "Postcode": 2050,
-          "Longitude": 4.34573807,
-          "Latitude": 51.21996925
-        },
-        "geometry": {
-          "x": 4.347008729340979,
-          "y": 51.2194353585792
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5012,
-          "Naam": "Park&Ride Merksem",
-          "Gemeente": "Antwerpen",
-          "District": "Merksem",
-          "Postcode": 2170,
-          "Longitude": 4.46016801,
-          "Latitude": 51.2587815
-        },
-        "geometry": {
-          "x": 4.461938847477897,
-          "y": 51.25799127349906
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5013,
-          "Naam": "Park&Ride Melsele",
-          "Gemeente": "Zwijndrecht",
-          "District": null,
-          "Postcode": 2070,
-          "Longitude": 4.30406943,
-          "Latitude": 51.2186944
-        },
-        "geometry": {
-          "x": 4.3066922602269955,
-          "y": 51.218649487281716
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5014,
-          "Naam": "Park&Ride Wommelgem",
-          "Gemeente": "Wommelgem",
-          "District": null,
-          "Postcode": 2160,
-          "Longitude": 4.48973021,
-          "Latitude": 51.21222981
-        },
-        "geometry": {
-          "x": 4.492108094495291,
-          "y": 51.211967404355065
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5015,
-          "Naam": "Park&Ride E19",
-          "Gemeente": "Kontich",
-          "District": null,
-          "Postcode": 2550,
-          "Longitude": 4.43087665,
-          "Latitude": 51.12680233
-        },
-        "geometry": {
-          "x": 4.432148344598557,
-          "y": 51.12626524572041
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5016,
-          "Naam": "Park&Ride Blancefloer 1",
-          "Gemeente": "Antwerpen",
-          "District": "Antwerpen",
-          "Postcode": 2050,
-          "Longitude": 4.3600292,
-          "Latitude": 51.22118468
-        },
-        "geometry": {
-          "x": 4.360083301198651,
-          "y": 51.22055590100642
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5017,
-          "Naam": "Park&Ride Blancefloer 2",
-          "Gemeente": "Antwerpen",
-          "District": "Antwerpen",
-          "Postcode": 2050,
-          "Longitude": 4.36301815,
-          "Latitude": 51.22072382
-        },
-        "geometry": {
-          "x": 4.3633912556225685,
-          "y": 51.22024610250572
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5018,
-          "Naam": "Park&Ride Luchtbal",
-          "Gemeente": "Antwerpen",
-          "District": "Antwerpen",
-          "Postcode": 2030,
-          "Longitude": 4.41770847,
-          "Latitude": 51.246255
-        },
-        "geometry": {
-          "x": 4.41937937692651,
-          "y": 51.26287249843967
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5019,
-          "Naam": "Park&Ride Blancefloer 4",
-          "Gemeente": "Antwerpen",
-          "District": "Antwerpen",
-          "Postcode": 2050,
-          "Longitude": 4.360556,
-          "Latitude": 51.219444
-        },
-        "geometry": {
-          "x": 4.36058363616409,
-          "y": 51.21933670088653
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5020,
-          "Naam": "Park&Ride Bosuil",
-          "Gemeente": "Deurne",
-          "District": "Deurne",
-          "Postcode": 2100,
-          "Longitude": 4.4678706,
-          "Latitude": 51.23157304
-        },
-        "geometry": {
-          "x": 4.469779980761448,
-          "y": 51.23044176871532
-        }
-      },
-      {
-        "attributes": {
-          "OBJECTID": 5021,
-          "Naam": "Park& Ride Metropolis (TIJDELIJK)",
-          "Gemeente": "Antwerpen",
-          "District": "Antwerpen",
-          "Postcode": 2030,
-          "Longitude": 4.41893277,
-          "Latitude": 51.24572693
-        },
-        "geometry": {
-          "x": 4.418932765585693,
-          "y": 51.24572693264673
-        }
+      "geometry": {
+        "x": 4.391786010699708,
+        "y": 51.183500395677925
       }
-    ]
-  }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5010,
+        "Naam": "Park&Ride Boechout",
+        "Gemeente": "Boechout",
+        "District": null,
+        "Postcode": 2530,
+        "Tramlijnen": "15",
+        "Buslijnen": "51 - 90",
+        "Longitude": 4.49263804,
+        "Latitude": 51.16942712,
+        "GISID": "PARKRIDE00005",
+        "Plaatsen": 204,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.493912131747247,
+        "y": 51.16889089313977
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5011,
+        "Naam": "Park&Ride Blancefloer 3",
+        "Gemeente": "Antwerpen",
+        "District": "Antwerpen",
+        "Postcode": 2050,
+        "Tramlijnen": "3",
+        "Buslijnen": "81 - 82 - 83 - 85",
+        "Longitude": 4.34573807,
+        "Latitude": 51.21996925,
+        "GISID": "PARKRIDE00009",
+        "Plaatsen": 185,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.347008729340979,
+        "y": 51.2194353585792
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5012,
+        "Naam": "Park&Ride Merksem",
+        "Gemeente": "Antwerpen",
+        "District": "Merksem",
+        "Postcode": 2170,
+        "Tramlijnen": "2 - 3",
+        "Buslijnen": "640 - 642 - 650",
+        "Longitude": 4.46016801,
+        "Latitude": 51.2587815,
+        "GISID": "PARKRIDE00006",
+        "Plaatsen": 280,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.461938847477897,
+        "y": 51.25799127349906
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5013,
+        "Naam": "Park&Ride Melsele",
+        "Gemeente": "Zwijndrecht",
+        "District": null,
+        "Postcode": 2070,
+        "Tramlijnen": "3",
+        "Buslijnen": "81 - 82 - 83 - 85 - 87 - 280",
+        "Longitude": 4.30406943,
+        "Latitude": 51.2186944,
+        "GISID": "PARKRIDE00001",
+        "Plaatsen": 380,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.3066922602269955,
+        "y": 51.218649487281716
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5014,
+        "Naam": "Park&Ride Wommelgem",
+        "Gemeente": "Wommelgem",
+        "District": null,
+        "Postcode": 2160,
+        "Tramlijnen": "8",
+        "Buslijnen": "421",
+        "Longitude": 4.48973021,
+        "Latitude": 51.21222981,
+        "GISID": "PARKRIDE00010",
+        "Plaatsen": 186,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.492108094495291,
+        "y": 51.211967404355065
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5015,
+        "Naam": "Park&Ride E19",
+        "Gemeente": "Kontich",
+        "District": null,
+        "Postcode": 2550,
+        "Tramlijnen": null,
+        "Buslijnen": "191",
+        "Longitude": 4.43087665,
+        "Latitude": 51.12680233,
+        "GISID": "PARKRIDE00012",
+        "Plaatsen": 332,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.432148344598557,
+        "y": 51.12626524572041
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5016,
+        "Naam": "Park&Ride Blancefloer 1",
+        "Gemeente": "Antwerpen",
+        "District": "Antwerpen",
+        "Postcode": 2050,
+        "Tramlijnen": "3 - 5 - 9 - 15",
+        "Buslijnen": "81 - 82 - 83 - 85",
+        "Longitude": 4.3600292,
+        "Latitude": 51.22118468,
+        "GISID": "PARKRIDE00002",
+        "Plaatsen": 250,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.360083301198651,
+        "y": 51.22055590100642
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5017,
+        "Naam": "Park&Ride Blancefloer 2",
+        "Gemeente": "Antwerpen",
+        "District": "Antwerpen",
+        "Postcode": 2050,
+        "Tramlijnen": "3 - 5 - 9 - 15",
+        "Buslijnen": "81 - 82 - 83 - 85",
+        "Longitude": 4.36301815,
+        "Latitude": 51.22072382,
+        "GISID": "PARKRIDE00008",
+        "Plaatsen": 38,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.3633912556225685,
+        "y": 51.22024610250572
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5018,
+        "Naam": "Park&Ride Luchtbal",
+        "Gemeente": "Antwerpen",
+        "District": "Antwerpen",
+        "Postcode": 2030,
+        "Tramlijnen": "6 - 70",
+        "Buslijnen": "720 - 730 - 760 - 761 - 770 - 771 - 772 - 776",
+        "Longitude": 4.41770847,
+        "Latitude": 51.246255,
+        "GISID": "PARKRIDE00007",
+        "Plaatsen": 114,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.41937937692651,
+        "y": 51.26287249843967
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5019,
+        "Naam": "Park&Ride Blancefloer 4",
+        "Gemeente": "Antwerpen",
+        "District": "Antwerpen",
+        "Postcode": 2050,
+        "Tramlijnen": "3 - 5 - 9 - 15",
+        "Buslijnen": "81 - 82 - 83 - 84 - 85",
+        "Longitude": 4.360556,
+        "Latitude": 51.219444,
+        "GISID": "PARKRIDE00013",
+        "Plaatsen": 200,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.36058363616409,
+        "y": 51.21933670088653
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5020,
+        "Naam": "Park&Ride Bosuil",
+        "Gemeente": "Deurne",
+        "District": "Deurne",
+        "Postcode": 2100,
+        "Tramlijnen": "5",
+        "Buslijnen": "19",
+        "Longitude": 4.4678706,
+        "Latitude": 51.23157304,
+        "GISID": "PARKRIDE00011",
+        "Plaatsen": 123,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.469779980761448,
+        "y": 51.23044176871532
+      }
+    },
+    {
+      "attributes": {
+        "OBJECTID": 5021,
+        "Naam": "Park& Ride Metropolis (TIJDELIJK)",
+        "Gemeente": "Antwerpen",
+        "District": "Antwerpen",
+        "Postcode": 2030,
+        "Tramlijnen": "1 - 6",
+        "Buslijnen": "650 - 720 - 770 - 762 - 763 - 764 - 771 - 772 - 775 - 776",
+        "Longitude": 4.41893277,
+        "Latitude": 51.24572693,
+        "GISID": "PARKRIDE00014",
+        "Plaatsen": 76,
+        "GEBRUIK": "bestaand"
+      },
+      "geometry": {
+        "x": 4.418932765585693,
+        "y": 51.24572693264673
+      }
+    }
+  ]
+}
