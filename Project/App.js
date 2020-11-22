@@ -1,67 +1,109 @@
-import React,{ useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
-import {createStackNavigator} from "@react-navigation/stack";
-import {NavigationContainer} from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
-import MapView, {Marker} from 'react-native-maps';
-import { MaterialIcons } from '@expo/vector-icons';
-import { Foundation } from '@expo/vector-icons';
+import MapView, { Marker } from 'react-native-maps';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import * as Location from 'expo-location';
+import { render } from 'react-dom';
 
+export const BottomNavi = () => {
 
-//Functie Map
-export const MapScreen = (props) =>{
-  const [locatie, setLocatie] = useState(undefined);
+  return (
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
 
-  return(
-    <View style={styles.container}>
-      <MapView style={{width:"100%", height:"100%"}}
-        region={{
-        latitude: 50.814604,
-        longitude: 4.386932,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-       }}
-      >
-      <Marker
-        key="Marker1"
-        coordinate={{latitude: 50.814604, longitude: 4.386932}}
-        title="AP Hogeschool"
-        description="Hier zijn we"
-      />
-      </MapView>
-   </View>
+            if (route.name === 'Map') {
+              iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
+            } else if (route.name === 'List') {
+              iconName = focused ? 'ios-list-box' : 'ios-list';
+            }
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+        })}
+        tabBarOptions={{
+          activeTintColor: 'tomato',
+          inactiveTintColor: 'gray',
+        }}>
+
+        <Tab.Screen name="Map" component={MapScreen} />
+        <Tab.Screen name="List" component={ListScreen} />
+      </Tab.Navigator>
+    </NavigationContainer>
   )
 }
 
-//Functie Lijst
-export const ListScreen = () =>{
-  return(
+
+export const MapScreen = () => {
+  const URL = 'https://api.jsonbin.io/b/5fba91b0522f1f0550cc2e57/2';
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(URL)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        return responseJson;
+      })
+      .then(parking => {
+        setArticles(parking);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+  }, []);
+
+  
+  if (loading) {
+    return <Text>Data Loading...</Text>
+  }else{
+  
+    let parkeerplaatsen = articles.map((val , key) => {
+      return <View key={key}>
+         <MapView style={{ width: "100%", height:"90%" , marginTop:40}}>
+      <Marker key="Marker1"
+      coordinate={ {latitude: val.Latitude , longitude: val.Longitude} }
+      title={val.Naam}
+      description={val.Gemeente +" "+ val.District +" "+ val.Postcode  } >
+      </Marker>
+    </MapView>
+      </View>
+    })
+    return<View>
+        {parkeerplaatsen}
+  </View>
+  
+  }
+  }
+
+export const ListScreen = () => {
+  return (
     <View>
-      <Text style={{textAlign: "center"}}>hell</Text>
+      <Text style={{ textAlign: "center" }}>hell</Text>
     </View>
   )
 }
 
-//App
-const Tab = createBottomTabNavigator();
+ 
 export default function App() {
+
+
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen name ="Map" component={MapScreen} options={{tabBarIcon: ({color, size}) => (
-          <MaterialIcons name="map" size={24} color="black" />
-        )}
-        }/>
-        <Tab.Screen name ="List" component={ListScreen} options={{tabBarIcon: ({color, size}) => (
-          <Foundation name="list" size={24} color="black" />
-        )}
-        }/>
-      </Tab.Navigator>
-    </NavigationContainer>
+
+    <BottomNavi />
   );
 }
+
+
+const Tab = createBottomTabNavigator();
 
 const styles = StyleSheet.create({
   container: {
