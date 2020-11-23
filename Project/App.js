@@ -28,7 +28,7 @@ export const BottomNavi = () => {
           <Foundation name="list" size={24} color="black" />
           )}}
           />
-          
+
       </Tab.Navigator>
     </NavigationContainer>
   )
@@ -62,7 +62,7 @@ export const MapScreen = () => {
   } else {
     return (
       <View>
-        <MapView style={{ width: "100%", height: "90%", marginTop: 40 }} region={{
+        <MapView style={{ width: "100%", height: "100%", marginTop: 40 }} region={{
           latitude: 51.260197,
           longitude: 4.402771,
           latitudeDelta: 0.5,
@@ -73,16 +73,12 @@ export const MapScreen = () => {
             return<Marker
               key={val.Naam}
               coordinate={{ latitude: val.Latitude , longitude: val.Longitude }}
+              image={require('../Project/assets/park.png')} 
               title = {val.Naam}
-              description= {val.Gemeente + " " + val.District + " " + val.Postcode} />
-
+              description= {val.Gemeente + " " + val.District + " " + val.Postcode} 
+              />
+            
           })}
-          <Marker
-            key="Marker1"
-            coordinate={{ latitude: 50.814604, longitude: 4.386932 }}
-            title="AP Hogeschool"
-            description="Hier zijn we"
-          />
         </MapView>
       </View>)
 
