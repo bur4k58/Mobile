@@ -9,31 +9,26 @@ import MapView, { Marker } from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Location from 'expo-location';
 import { render } from 'react-dom';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Foundation } from '@expo/vector-icons';
 
 export const BottomNavi = () => {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
+      <Tab.Navigator>
+        <Tab.Screen name="Map" component={MapScreen} 
+        options={{tabBarIcon: ({ color, size }) => (
+          <MaterialIcons name="map" size={24} color="black" />
+          )}}
+          />
 
-            if (route.name === 'Map') {
-              iconName = focused ? 'ios-information-circle' : 'ios-information-circle-outline';
-            } else if (route.name === 'List') {
-              iconName = focused ? 'ios-list-box' : 'ios-list';
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-        })}
-        tabBarOptions={{
-          activeTintColor: 'tomato',
-          inactiveTintColor: 'gray',
-        }}>
-
-        <Tab.Screen name="Map" component={MapScreen} />
-        <Tab.Screen name="List" component={ListScreen} />
+        <Tab.Screen name="List" component={ListScreen} 
+        options={{tabBarIcon: ({ color, size }) => (
+          <Foundation name="list" size={24} color="black" />
+          )}}
+          />
+          
       </Tab.Navigator>
     </NavigationContainer>
   )
