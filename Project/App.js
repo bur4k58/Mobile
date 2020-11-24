@@ -13,7 +13,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 
 export const BottomNavi = () => {
-
   return (
     <NavigationContainer>
       <Tab.Navigator>
@@ -35,7 +34,37 @@ export const BottomNavi = () => {
 }
 
 
+export const locataieOphalen = () => {
+  //Permision locatie
+  const [hasPermission, setHasPermission] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+    const { status } = await Location.requestPermissionsAsync();
+    setHasPermission(status === 'granted');
+    })();
+  });
+
+  if (hasPermission === null) {
+    return <View/>
+  }
+  if (hasPermission === false) {
+    return <Text>No access to location</Text>
+  }
+      
+
+  //Locatie ophalen
+  const [location, setLocation] = useState('Loading');
+  useEffect(() => {
+    (async() => {
+      let position = await Location.getCurrentPositionAsync();
+      setLocation(JSON.stringify(position));
+      })();
+    },[]);
+}
+
 export const MapScreen = () => {
+
   const URL = 'https://api.jsonbin.io/b/5fba91b0522f1f0550cc2e57/2';
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -53,7 +82,6 @@ export const MapScreen = () => {
       .catch(error => {
         console.error(error);
       });
-
   }, []);
 
 
@@ -69,7 +97,6 @@ export const MapScreen = () => {
           longitudeDelta: 0.5
         }}>
           {articles.map(val => {
-           
             return<Marker
               key={val.Naam}
               coordinate={{ latitude: val.Latitude , longitude: val.Longitude }}
@@ -77,11 +104,9 @@ export const MapScreen = () => {
               title = {val.Naam}
               description= {val.Gemeente + " " + val.District + " " + val.Postcode} 
               />
-            
           })}
         </MapView>
       </View>)
-
   }
 }
 
@@ -95,10 +120,7 @@ export const ListScreen = () => {
 
 
 export default function App() {
-
-
   return (
-
     <BottomNavi />
   );
 }
