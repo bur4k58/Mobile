@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Callout, Marker } from 'react-native-maps';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Location from 'expo-location';
 import { render } from 'react-dom';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
+import { Button } from 'react-native-paper';
 
 export const BottomNavi = () => {
   return (
@@ -65,8 +66,9 @@ export const locataieOphalen = () => {
 
 export const MapScreen = () => {
 
+
   const URL = 'https://api.jsonbin.io/b/5fba91b0522f1f0550cc2e57/2';
-  const [articles, setArticles] = useState([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -76,7 +78,7 @@ export const MapScreen = () => {
         return responseJson;
       })
       .then(parking => {
-        setArticles(parking);
+        setData(parking);
         setLoading(false);
       })
       .catch(error => {
@@ -84,6 +86,9 @@ export const MapScreen = () => {
       });
   }, []);
 
+ const hetisTest = () => {
+    Alert.alert("eben")
+  }
 
   if (loading) {
     return <Text>Data Loading...</Text>
@@ -96,14 +101,24 @@ export const MapScreen = () => {
           latitudeDelta: 0.5,
           longitudeDelta: 0.5
         }}>
-          {articles.map(val => {
+          {data.map(val => {
             return<Marker
               key={val.Naam}
               coordinate={{ latitude: val.Latitude , longitude: val.Longitude }}
               image={require('../Project/assets/park.png')} 
               title = {val.Naam}
               description= {val.Gemeente + " " + val.District + " " + val.Postcode} 
-              />
+              > 
+              <Callout tooltip >
+                <View style={styles.popUpDetailMarker}>
+                  <Text style={{color:"black",fontSize:15}}>{val.Naam}</Text>
+                  <Text style={{color:"black"}} >{val.Gemeente + " " + val.Postcode } </Text>
+                  <TouchableOpacity style={styles.buttonDetails} onPress={hetisTest}>
+                    <Text style={styles.textInButton}>Details</Text>
+                  </TouchableOpacity>
+                </View>
+              </Callout>
+              </Marker>
           })}
         </MapView>
       </View>)
@@ -130,9 +145,33 @@ const Tab = createBottomTabNavigator();
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  popUpDetailMarker:{
+    backgroundColor: "#d0dbcc",
+    height: 100,
+    width: 330,
+    alignItems:"center",
+    justifyContent:"center",
+    borderRadius:10,
+    padding:10
+  },
+  buttonDetails:{
+    height:40,
+    width:200,
+    borderColor:"black",
+    borderWidth:1,
+    borderStyle:"solid",
+    alignItems:"center",
+    justifyContent:"center",
+    backgroundColor: "black",
+    borderRadius:20,
+    position:"relative",
+    top:5,
+    marginBottom:15
+  },
+  textInButton:{
+    color:"white",
+    fontSize:20,
+    fontFamily:"Arial"
   }
 });
