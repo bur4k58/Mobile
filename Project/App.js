@@ -12,40 +12,43 @@ import { render } from 'react-dom';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
-import { Value } from 'react-native-reanimated';
+import { color, Value } from 'react-native-reanimated';
+import { ActivityIndicator, Colors, Appbar } from 'react-native-paper';
 
-{/*
-export const locataieOphalen = () => {
-  //Permision locatie
-  const [hasPermission, setHasPermission] = useState(null);
-
+//locatie ophalen van gebruiker
+export const LocationView = (set) => {
   useEffect(() => {
     (async () => {
-    const { status } = await Location.requestPermissionsAsync();
-    setHasPermission(status === 'granted');
+      let position = await Location.getCurrentPositionAsync();
+      console.log(position.coords.latitude)
+      set((position));
+    })();
+  }, []);
+}
+
+//toegang vragen  
+export const GebruikerLocatie = (props) => {
+
+  const [hasPermission, setHasPermission] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
     })();
   });
-
   if (hasPermission === null) {
-    return <View/>
+    return <View />
   }
   if (hasPermission === false) {
     return <Text>No access to location</Text>
   }
-      
-
-  //Locatie ophalen
-  const [location, setLocation] = useState('Loading');
-  useEffect(() => {
-    (async() => {
-      let position = await Location.getCurrentPositionAsync();
-      setLocation(JSON.stringify(position));
-      })();
-    },[]);
-} */}
+  return (
+    LocationView(props)
+  );
+}
 
 
-export const dataInladen = (props) =>{
+export const dataInladen = (props) => {
   useEffect(() => {
     fetch('https://api.jsonbin.io/b/5fc054fc177c556ef9b35636/1')
       .then((response) => response.json())
@@ -54,7 +57,7 @@ export const dataInladen = (props) =>{
       })
       .then(parking => {
         props(parking);
-    
+
       })
       .catch(error => {
         console.error(error);
@@ -68,11 +71,11 @@ export const dataInladen = (props) =>{
 export const BottomNavi = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator tabBarOptions={{ activeTintColor: "red", inactiveTintColor: "black" }}>
         <Tab.Screen name="Map" component={MapStack}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <MaterialIcons name="map" size={24} color="black" />
+              <MaterialIcons name="map" size={24} color="red" />
             )
           }}
         />
@@ -80,7 +83,7 @@ export const BottomNavi = () => {
         <Tab.Screen name="List" component={ListStack}
           options={{
             tabBarIcon: ({ color, size }) => (
-              <Foundation name="list" size={24} color="black" />
+              <Foundation name="list" size={24} color="red" />
             )
           }}
         />
@@ -97,7 +100,13 @@ export const MapStack = () => {
   return (
 
     <Stack.Navigator>
-      <Stack.Screen name="MapScreen" component={MapScreen} options={{ title: "Map Scherm" }} />
+      <Stack.Screen name="MapScreen" component={MapScreen} options={{
+        title: "Park & Ride Antwerpen", headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }} />
+
       <Stack.Screen name="DetailsMap" component={DetailMapButton} />
     </Stack.Navigator>
   )
@@ -108,8 +117,13 @@ export const ListStack = () => {
   return (
 
     <Stack.Navigator>
-      <Stack.Screen name="ListScreen" component={ListScreen} options={{ title: "List Scherm" }} />
-      <Stack.Screen name="DetailsMap" component={DetailMapButton}  />
+      <Stack.Screen name="ListScreen" component={ListScreen} options={{
+        title: "Park & Ride Antwerpen", headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }} />
+      <Stack.Screen name="DetailsMap" component={DetailMapButton} />
     </Stack.Navigator>
   )
 }
@@ -117,8 +131,11 @@ export const ListStack = () => {
 
 
 export const DetailMapButton = ({ route }) => {
+
   return (
+
     <View style={styles.detailPaginaVanMap}>
+
       <View style={styles.detailPaginaVanMapView}><Text style={{ color: "white", fontSize: 20 }}>{route.params.data.Naam}</Text></View>
       <TextInput style={styles.detailPaginaTitle} editable={false} value={'Naam'} />
       <Text style={styles.detailPaginaText}>{route.params.data.Naam}</Text>
@@ -137,19 +154,25 @@ export const DetailMapButton = ({ route }) => {
 
 
 export const MapScreen = ({ navigation }) => {
-  
+
+
+
   const [markerClickt, setMarkerClickt] = useState(false)
   const [momdata, setMomdata] = useState("")
   const [data, setData] = useState([]);
-
+  const [locatie, setLocatie] = useState(true)
   dataInladen(setData)
-  
+  GebruikerLocatie(setLocatie)
+
+{(locatie ? console.log("load") : console.log(locatie))}
+
 
   const detailView = () => {
     return (
       setMarkerClickt(true)
     )
   }
+  
 
   const detailMarker = (val) => {
     return (
@@ -158,12 +181,14 @@ export const MapScreen = ({ navigation }) => {
         <Text style={{ color: "black", fontSize: 18 }} >{val.Gemeente + " " + val.Postcode}</Text>
         <Button style={{ backgroundColor: "#ff1a1a", width: "80%", marginTop: 20 }}
           onPress={() => { navigation.navigate('DetailsMap', { data: val }) }}
-        ><Text style={{color:"white"}}>Details</Text></Button>
+        ><Text style={{ color: "white" }}>Details</Text></Button>
       </View>
     )
   }
+
   if (data == false) {
-    return <View style={styles.dataLoading}><Text>Data Loading...</Text></View>
+    return <ActivityIndicator style={styles.dataLoading} animating={true} size="large" color={Colors.red800} />
+
   } else {
     return (
       <View>
@@ -193,28 +218,27 @@ export const MapScreen = ({ navigation }) => {
 }
 
 
-
 export const ListScreen = ({ navigation }) => {
 
   const [data, setData] = useState([]);
   dataInladen(setData)
-  
+
 
   return (
-    <View style={{marginTop:15,backgroundColor:"white"}}>
+    <View style={{ marginTop: 15, backgroundColor: "white" }}>
       <ScrollView>
-      {data.map((val)=>{
-        return(
-        <TouchableOpacity  key={val.OBJECTID}  onPress={() => { navigation.navigate('DetailsMap', { data: val }) }}>
-        <View style={{width:"100%",height:50,margin:5,backgroundColor:"red",}}>
-        <Text style={{ color: "white", fontSize: 15, marginTop: 10 , justifyContent:"center",alignSelf:"center" }}>{val.Naam}</Text>
-        <Text style={{ color: "white", fontSize: 10, justifyContent:"center",alignSelf:"center" }} >{val.Gemeente + " " + val.Postcode}</Text>
-  
-        
-        </View>
-        </TouchableOpacity>
-        )
-      })}
+        {data.map((val) => {
+          return (
+            <TouchableOpacity key={val.OBJECTID} onPress={() => { navigation.navigate('DetailsMap', { data: val }) }}>
+              <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
+                <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{val.Naam}</Text>
+                <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{val.Gemeente + " " + val.Postcode}</Text>
+
+
+              </View>
+            </TouchableOpacity>
+          )
+        })}
       </ScrollView>
     </View>
   )
@@ -223,7 +247,8 @@ export const ListScreen = ({ navigation }) => {
 
 export default function App() {
   return (
-    <BottomNavi />
+      <BottomNavi />
+    
   );
 }
 
@@ -271,8 +296,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     alignSelf: "center",
     borderRadius: 10,
-    borderWidth:1,
-    borderColor:"black"
+    borderWidth: 1,
+    borderColor: "black"
   },
   dataLoading: {
     flex: 1,
