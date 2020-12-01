@@ -6,7 +6,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import MapView, { Callout, Marker } from 'react-native-maps';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import * as Location from 'expo-location';
 import { render } from 'react-dom';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -50,7 +49,6 @@ export const MapStack = () => {
 
 export const ListStack = () => {
   return (
-
     <Stack.Navigator>
       <Stack.Screen name="ListScreen" component={ListScreen} options={{
         title: "Park & Ride Antwerpen", headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff',
@@ -58,14 +56,13 @@ export const ListStack = () => {
           fontWeight: 'bold',
         },
       }} />
-      <Stack.Screen name="DetailsMap" component={DetailMapButton} />
+      <Stack.Screen name="DetailsMap" component={DetailMapButton}options={{headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff'}} />
     </Stack.Navigator>
   )
 }
 
 //Functie Detail knop map
 export const DetailMapButton = ({ route }) => {
-  
   return (
     <View style={styles.detailPaginaVanMap}>
       <View style={styles.detailPaginaVanMapView}><Text style={{ color: "white", fontSize: 20 }}>{route.params.data.Naam}</Text></View>
@@ -80,6 +77,29 @@ export const DetailMapButton = ({ route }) => {
       <Text style={styles.detailPaginaText} >{route.params.data.Buslijnen}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Tramlijnen'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Tramlijnen}</Text>
+      <Button style={styles.detailPaginaVanMapView} onPress={() => {}}><Text style={{ color: "white", fontSize: 15}}>Voeg toe aan favorieten</Text></Button>
+    </View>
+  )
+}
+
+//Functie favorites
+export const Favorites =() => {
+  const [data, setData] = useState([]);
+
+  return (
+    <View style={{ marginTop: 15, backgroundColor: "white" }}>
+      <ScrollView>
+        {data.map((val) => {
+          return (
+            <TouchableOpacity key={val.OBJECTID} onPress={() => { navigation.navigate('DetailsMap', { data: val }) }}>
+              <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
+                <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{val.Naam}</Text>
+                <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{val.Gemeente + " " + val.Postcode}</Text>
+              </View>
+            </TouchableOpacity>
+          )
+        })}
+      </ScrollView>
     </View>
   )
 }
@@ -90,6 +110,7 @@ export const MapScreen = ({ navigation }) => {
   const [momdata, setMomdata] = useState("")
   const [data, setData] = useState([]);
   const [locatie, setLocatie] = useState("loading")
+  const [favo, setFavo] = useState([]);
 
   //Data inladen
   dataInladen(setData);
@@ -170,7 +191,6 @@ export const MapScreen = ({ navigation }) => {
 
 //Functie List navigatie
 export const ListScreen = ({ navigation }) => {
-
   const [data, setData] = useState([]);
   dataInladen(setData)
 
@@ -198,9 +218,10 @@ export const BottomNavi = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator tabBarOptions={{ activeTintColor: "red", inactiveTintColor: "black" }}>
+
         <Tab.Screen name="Map" component={MapStack}
           options={{
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: () => (
               <MaterialIcons name="map" size={24} color="red" />
             )
           }}
@@ -208,8 +229,16 @@ export const BottomNavi = () => {
 
         <Tab.Screen name="List" component={ListStack}
           options={{
-            tabBarIcon: ({ color, size }) => (
+            tabBarIcon: () => (
               <Foundation name="list" size={24} color="red" />
+            )
+          }}
+        />
+
+        <Tab.Screen name="Favorites" component={Favorites}
+          options={{
+            tabBarIcon: () => (
+              <MaterialIcons name="favorite" size={24} color="red" />
             )
           }}
         />
