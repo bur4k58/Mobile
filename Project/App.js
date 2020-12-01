@@ -16,37 +16,16 @@ import { color, Value } from 'react-native-reanimated';
 import { ActivityIndicator, Colors, Appbar } from 'react-native-paper';
 
 //locatie ophalen van gebruiker
-export const LocationView = (set) => {
+export const LocationView = () => {
+  const [loc, setLoc] = useState("")
   useEffect(() => {
     (async () => {
       let position = await Location.getCurrentPositionAsync();
-      console.log(position.coords.latitude)
-      set((position));
+      setLoc(position.coords);
     })();
   }, []);
+  return loc;
 }
-
-//toegang vragen  
-export const GebruikerLocatie = (props) => {
-
-  const [hasPermission, setHasPermission] = useState(null);
-  useEffect(() => {
-    (async () => {
-      const { status } = await Location.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  });
-  if (hasPermission === null) {
-    return <View />
-  }
-  if (hasPermission === false) {
-    return <Text>No access to location</Text>
-  }
-  return (
-    LocationView(props)
-  );
-}
-
 
 export const dataInladen = (props) => {
   useEffect(() => {
@@ -57,7 +36,6 @@ export const dataInladen = (props) => {
       })
       .then(parking => {
         props(parking);
-
       })
       .catch(error => {
         console.error(error);
@@ -155,24 +133,27 @@ export const DetailMapButton = ({ route }) => {
 
 export const MapScreen = ({ navigation }) => {
 
-
-
   const [markerClickt, setMarkerClickt] = useState(false)
   const [momdata, setMomdata] = useState("")
   const [data, setData] = useState([]);
-  const [locatie, setLocatie] = useState(true)
-  dataInladen(setData)
-  GebruikerLocatie(setLocatie)
+  const [locatie, setLocatie] = useState("loading")
 
-{(locatie ? console.log("load") : console.log(locatie))}
+  //
+  dataInladen(setData);
 
+  //
+  useEffect(() => {
+    (async () => {
+      let position = await Location.getCurrentPositionAsync();
+      setLocatie(position.coords);
+    })();
+  }, []);
 
   const detailView = () => {
     return (
       setMarkerClickt(true)
     )
   }
-  
 
   const detailMarker = (val) => {
     return (
@@ -185,16 +166,18 @@ export const MapScreen = ({ navigation }) => {
       </View>
     )
   }
-
+if (locatie == "loading") {
+  return <ActivityIndicator style={styles.dataLoading} animating={true} size="large" color={Colors.red800} />
+}
+else {
   if (data == false) {
     return <ActivityIndicator style={styles.dataLoading} animating={true} size="large" color={Colors.red800} />
-
   } else {
     return (
       <View>
         <MapView style={{ width: "100%", height: "100%", zIndex: 0 }} region={{
-          latitude: 51.260197,
-          longitude: 4.402771,
+          latitude: locatie.latitude,
+          longitude: locatie.longitude,
           latitudeDelta: 0.5,
           longitudeDelta: 0.5
         }}>
@@ -216,6 +199,7 @@ export const MapScreen = ({ navigation }) => {
       </View>)
   }
 }
+}
 
 
 export const ListScreen = ({ navigation }) => {
@@ -233,8 +217,6 @@ export const ListScreen = ({ navigation }) => {
               <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
                 <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{val.Naam}</Text>
                 <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{val.Gemeente + " " + val.Postcode}</Text>
-
-
               </View>
             </TouchableOpacity>
           )
@@ -246,9 +228,23 @@ export const ListScreen = ({ navigation }) => {
 
 
 export default function App() {
+  const [hasPermission, setHasPermission] = useState(null);
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  });
+
+  if (hasPermission === null) {
+    return <View />
+  }
+  if (hasPermission === false) {
+    return <View style={{ flex: 1, justifyContent: 'center', alignItems: "center", alignSelf: "center" }}><Text>No access to location...</Text></View>
+  }
   return (
-      <BottomNavi />
-    
+    <BottomNavi />
+
   );
 }
 
