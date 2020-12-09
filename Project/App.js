@@ -56,13 +56,76 @@ export const ListStack = () => {
           fontWeight: 'bold',
         },
       }} />
-      <Stack.Screen name="DetailsMap" component={DetailMapButton}options={{headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff'}} />
+      <Stack.Screen name="DetailsMap" component={DetailMapButton} options={{ headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff' }} />
     </Stack.Navigator>
   )
 }
 
+export const FavoriteStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Favo" component={Favo} options={{
+        title: "Park & Ride Antwerpen", headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff',
+        headerTitleStyle: {
+          fontWeight: 'bold',
+        },
+      }} />
+      <Stack.Screen name="DetailsMap" component={DetailMapButton} options={{ headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff' }} />
+    </Stack.Navigator>
+  )
+}
+
+
+ const SaveFavo = async (props) => {
+   LoadFavo(props)
+  try {
+    await AsyncStorage.setItem(props.Naam, JSON.stringify(props));
+  } catch (e) {
+
+  }
+}
+
+ const LoadFavo = async (props) => {
+let arrayA = [];
+var tot ;
+arrayA.push("selim")
+if (props) {
+  tot = arrayA.push(props)
+}
+console.log(arrayA)
+console.log(tot)
+  try {
+    let dataPakken = JSON.parse(await AsyncStorage.getItem(props.Naam));
+    if (dataPakken !== null) {
+console.log(dataPakken.Naam)
+    }
+  } catch (e) {
+  }
+}
+
+ const Favo = ({ navigation }) => {
+
+
+  return (
+    <View>
+      {data ? <TouchableOpacity key={data.OBJECTID} onPress={() => { navigation.navigate('DetailsMap', { data: data }) }}>
+        <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
+          <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{data.Naam}</Text>
+          <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{data.Gemeente + " " + data.Postcode}</Text>
+        </View>
+      </TouchableOpacity> : <Text>Loading</Text>}
+
+    </View>
+
+
+  )
+}
+
+
+
 //Functie Detail knop map
-export const DetailMapButton = ({ route }) => {
+export const DetailMapButton = ({ route, navigation }) => {
+
   return (
     <View style={styles.detailPaginaVanMap}>
       <View style={styles.detailPaginaVanMapView}><Text style={{ color: "white", fontSize: 20 }}>{route.params.data.Naam}</Text></View>
@@ -77,29 +140,12 @@ export const DetailMapButton = ({ route }) => {
       <Text style={styles.detailPaginaText} >{route.params.data.Buslijnen}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Tramlijnen'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Tramlijnen}</Text>
-      <Button style={styles.detailPaginaVanMapView} onPress={() => {}}><Text style={{ color: "white", fontSize: 15}}>Voeg toe aan favorieten</Text></Button>
-    </View>
-  )
-}
-
-//Functie favorites
-export const Favorites =() => {
-  const [data, setData] = useState([]);
-
-  return (
-    <View style={{ marginTop: 15, backgroundColor: "white" }}>
-      <ScrollView>
-        {data.map((val) => {
-          return (
-            <TouchableOpacity key={val.OBJECTID} onPress={() => { navigation.navigate('DetailsMap', { data: val }) }}>
-              <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
-                <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{val.Naam}</Text>
-                <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{val.Gemeente + " " + val.Postcode}</Text>
-              </View>
-            </TouchableOpacity>
-          )
-        })}
-      </ScrollView>
+      <Button style={styles.detailPaginaVanMapView}
+        onPress={() => {
+          SaveFavo(route.params.data)
+        }}>
+        <Text style={{ color: "white", fontSize: 15 }}>Voeg toe aan favorieten</Text>
+      </Button>
     </View>
   )
 }
@@ -110,7 +156,6 @@ export const MapScreen = ({ navigation }) => {
   const [momdata, setMomdata] = useState("")
   const [data, setData] = useState([]);
   const [locatie, setLocatie] = useState("loading")
-  const [favo, setFavo] = useState([]);
 
   //Data inladen
   dataInladen(setData);
@@ -146,14 +191,11 @@ export const MapScreen = ({ navigation }) => {
   if (locatie == "loading") {
     return <ActivityIndicator style={styles.dataLoading} animating={true} size="large" color={Colors.red800} />
   }
-  else 
-  {
-    if (data == false) 
-    {
+  else {
+    if (data == false) {
       return <ActivityIndicator style={styles.dataLoading} animating={true} size="large" color={Colors.red800} />
-    } 
-    else 
-    {
+    }
+    else {
       return (
         <View>
           <MapView style={{ width: "100%", height: "100%", zIndex: 0 }} region={{
@@ -162,13 +204,6 @@ export const MapScreen = ({ navigation }) => {
             latitudeDelta: 0.5,
             longitudeDelta: 0.5
           }}>
-            <Marker 
-              key="Locatie"
-              coordinate={{latitude: locatie.latitude, longitude: locatie.longitude}}
-              title="Locatie"
-              description="U locatie"    
-            />
-
             {data.map(val => {
               return (
                 <Marker
@@ -188,6 +223,7 @@ export const MapScreen = ({ navigation }) => {
     }
   }
 }
+
 
 //Functie List navigatie
 export const ListScreen = ({ navigation }) => {
@@ -235,7 +271,7 @@ export const BottomNavi = () => {
           }}
         />
 
-        <Tab.Screen name="Favorites" component={Favorites}
+        <Tab.Screen name="Favorites" component={FavoriteStack}
           options={{
             tabBarIcon: () => (
               <MaterialIcons name="favorite" size={24} color="red" />
