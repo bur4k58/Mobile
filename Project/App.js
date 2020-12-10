@@ -7,7 +7,7 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import MapView, { Callout, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { render } from 'react-dom';
+import { createPortal, render } from 'react-dom';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
@@ -76,49 +76,40 @@ export const FavoriteStack = () => {
 }
 
 
- const SaveFavo = async (props) => {
-   LoadFavo(props)
+const SaveFavo = async (props) => {
   try {
     await AsyncStorage.setItem(props.Naam, JSON.stringify(props));
   } catch (e) {
-
   }
 }
 
- const LoadFavo = async (props) => {
-let arrayA = [];
-var tot ;
-arrayA.push("selim")
-if (props) {
-  tot = arrayA.push(props)
-}
-console.log(arrayA)
-console.log(tot)
-  try {
-    let dataPakken = JSON.parse(await AsyncStorage.getItem(props.Naam));
-    if (dataPakken !== null) {
-console.log(dataPakken.Naam)
-    }
-  } catch (e) {
+export const Favo = ({ navigation }) => {
+  const [data, setData] = useState([]);
+
+  dataInladen(setData)
+  let arrayAsync = [];
+
+  if (data) {
+    data.map(async (data) => {
+      let dataHalen = JSON.parse(await AsyncStorage.getItem(data.Naam));
+      if (dataHalen !== null) {
+       arrayAsync.push(dataHalen)
+      }
+    })
+  };
+
+  if (arrayAsync == null) {
+    return (
+      <View><Text>Niets</Text></View>
+    )
+  } else {
+    return (
+      <View><Text>iets</Text>
+      {console.log(arrayAsync)}
+      </View>
+    )
   }
-}
 
- const Favo = ({ navigation }) => {
-
-
-  return (
-    <View>
-      {data ? <TouchableOpacity key={data.OBJECTID} onPress={() => { navigation.navigate('DetailsMap', { data: data }) }}>
-        <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
-          <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{data.Naam}</Text>
-          <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{data.Gemeente + " " + data.Postcode}</Text>
-        </View>
-      </TouchableOpacity> : <Text>Loading</Text>}
-
-    </View>
-
-
-  )
 }
 
 
@@ -141,9 +132,7 @@ export const DetailMapButton = ({ route, navigation }) => {
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Tramlijnen'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Tramlijnen}</Text>
       <Button style={styles.detailPaginaVanMapView}
-        onPress={() => {
-          SaveFavo(route.params.data)
-        }}>
+        onPress={() => { SaveFavo(route.params.data) }} >
         <Text style={{ color: "white", fontSize: 15 }}>Voeg toe aan favorieten</Text>
       </Button>
     </View>
