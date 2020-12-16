@@ -1,5 +1,5 @@
-import React, { useEffect, useState, Image } from 'react';
-import { Alert, StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+import React, { useEffect, useState, useRef } from 'react';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -11,8 +11,9 @@ import { createPortal, render } from 'react-dom';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';
 import { Button } from 'react-native-paper';
-import { color, Value } from 'react-native-reanimated';
+import { color, cond, Value } from 'react-native-reanimated';
 import { ActivityIndicator, Colors, Appbar } from 'react-native-paper';
+import { Camera } from 'expo-camera';
 
 //Functie Datainladen
 export const dataInladen = (props) => {
@@ -32,6 +33,7 @@ export const dataInladen = (props) => {
 }
 
 const Stack = createStackNavigator();
+
 export const MapStack = () => {
   return (
     <Stack.Navigator>
@@ -43,6 +45,9 @@ export const MapStack = () => {
       }} />
 
       <Stack.Screen name="DetailsMap" component={DetailMapButton} />
+
+      <Stack.Screen name="FotoMaken" component={FotoMaken} />
+
     </Stack.Navigator>
   )
 }
@@ -57,6 +62,9 @@ export const ListStack = () => {
         },
       }} />
       <Stack.Screen name="DetailsMap" component={DetailMapButton} options={{ headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff' }} />
+
+      <Stack.Screen name="FotoMaken" component={FotoMaken} />
+
     </Stack.Navigator>
   )
 }
@@ -71,7 +79,46 @@ export const FavoriteStack = () => {
         },
       }} />
       <Stack.Screen name="DetailsMap" component={DetailMapButton} options={{ headerStyle: { backgroundColor: "red" }, headerTintColor: '#fff' }} />
+
+      <Stack.Screen name="FotoMaken" component={FotoMaken} />
     </Stack.Navigator>
+  )
+}
+
+export const FotoMaken = ({ route }) => {
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const camera = useRef();
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    })();
+  }, []);
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  const naam = route.params.data.Naam + "foto";
+
+  const takePictures = async () => {
+    let picture = await camera.current.takePictureAsync();
+    console.log(picture.uri);
+    console.log(naam);
+    await AsyncStorage.setItem(naam, JSON.stringify(picture.uri));
+  }
+
+  return (
+    <View style={{ width: '100%', height: '100%' }}>
+      <Camera style={{ flex: 1 }} type={Camera.Constants.Type.back} ref={camera} />
+      <Button style={{ marginBottom: 100, backgroundColor: "black" }} onPress={takePictures}>
+        <Text style={{ color: "white", fontSize: 15 }}>Neem een Foto</Text>
+      </Button>
+    </View>
   )
 }
 
@@ -85,48 +132,114 @@ const SaveFavo = async (props) => {
 
 export const Favo = ({ navigation }) => {
   const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
 
-  dataInladen(setData)
-  let arrayAsync = [];
+  dataInladen(setData);
 
-  if (data) {
-    data.map(async (data) => {
-      let dataHalen = JSON.parse(await AsyncStorage.getItem(data.Naam));
-      if (dataHalen !== null) {
-       arrayAsync.push(dataHalen)
+  //laden va favorieten in begin 
+  useEffect(() => {
+    let arrayA = [];
+    if (data) {
+      data.map(async (val) => {
+        try {
+          let dataHalen = JSON.parse(await AsyncStorage.getItem(val.Naam));
+          if (dataHalen !== null) {
+            arrayA.push(dataHalen)
+            setData1([...arrayA]);
+            console.log(arrayA)
+          }
+        }
+        catch (e) {
+        }
+      })
+    }
+  }, [data])
+
+  useEffect(() => {
+
+    navigation.addListener('focus', async () => {
+      let arrayA = [];
+      if (data) {
+        data.map(async (val) => {
+          try {
+            let dataHalen = JSON.parse(await AsyncStorage.getItem(val.Naam));
+            if (dataHalen !== null) {
+              arrayA.push(dataHalen)
+              setData1([...arrayA]);
+              console.log(arrayA)
+            }
+          }
+          catch (e) {
+          }
+        })
       }
     })
-  };
+  }, [data])
 
-  if (arrayAsync == null) {
-    return (
-      <View><Text>Niets</Text></View>
-    )
+  if (data1 == null) {
+    return <ActivityIndicator style={styles.dataLoading} animating={true} size="large" color={Colors.red800} />
   } else {
     return (
-      <View><Text>iets</Text>
-      {console.log(arrayAsync)}
+      <View style={{ marginTop: 15, backgroundColor: "white" }}>
+        <ScrollView>
+          {data1.map((val) => {
+            return (
+              <TouchableOpacity key={val.OBJECTID} onPress={() => { navigation.navigate('DetailsMap', { data: val }) }}>
+                <View style={{ width: "100%", height: 50, margin: 5, backgroundColor: "red", }}>
+                  <Text style={{ color: "white", fontSize: 15, marginTop: 10, justifyContent: "center", alignSelf: "center" }}>{val.Naam}</Text>
+                  <Text style={{ color: "white", fontSize: 10, justifyContent: "center", alignSelf: "center" }} >{val.Gemeente + " " + val.Postcode}</Text>
+                </View>
+              </TouchableOpacity>
+            )
+          })}
+        </ScrollView>
       </View>
     )
   }
-
 }
-
-
 
 //Functie Detail knop map
 export const DetailMapButton = ({ route, navigation }) => {
 
+  const [data1, setData1] = useState(null);
+  const [showbutton, setShowbutton] = useState(true);
+  const naam = route.params.data.Naam + "foto";
+
+  const FotoOphalen = async () => {
+    try {
+      let dataHalen = JSON.parse(await AsyncStorage.getItem(naam));
+      if (dataHalen !== null) {
+        console.log(dataHalen)
+        setData1(dataHalen)
+      }
+    }
+    catch (e) {
+    }
+  }
+
+  const DeleteFavorieten = async () => {
+    try {
+      await AsyncStorage.removeItem(route.params.data.Naam);
+    } catch (e) { }
+  }
+
+  useEffect(() => {
+    navigation.addListener('focus', async () => {
+      FotoOphalen();
+    })
+  })
+
+
   return (
     <View style={styles.detailPaginaVanMap}>
       <View style={styles.detailPaginaVanMapView}><Text style={{ color: "white", fontSize: 20 }}>{route.params.data.Naam}</Text></View>
+      {data1 !== null ? <Image source={{ uri: data1 }} style={styles.imageDetailPagina} resizeMode="stretch" /> : null}
       <TextInput style={styles.detailPaginaTitle} editable={false} value={'Naam'} />
       <Text style={styles.detailPaginaText}>{route.params.data.Naam}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Adres'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Gemeente + " " + route.params.data.Postcode}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Aantal Plaatsen'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Plaatsen}</Text>
-      <View style={styles.detailPaginaVanMapView}><Text style={{ color: "white", fontSize: 20 }}>Bereikbaar Met</Text></View>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Buslijnen'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Buslijnen}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Tramlijnen'} />
@@ -134,6 +247,14 @@ export const DetailMapButton = ({ route, navigation }) => {
       <Button style={styles.detailPaginaVanMapView}
         onPress={() => { SaveFavo(route.params.data) }} >
         <Text style={{ color: "white", fontSize: 15 }}>Voeg toe aan favorieten</Text>
+      </Button>
+      <Button style={styles.detailPaginaVanMapView}
+        onPress={() => { DeleteFavorieten() }} >
+        <Text style={{ color: "white", fontSize: 15 }}>Verwijderen van favorieten</Text>
+      </Button>
+
+      <Button style={styles.detailPaginaVanMapView} onPress={() => { navigation.navigate('FotoMaken', { data: route.params.data }) }} >
+        <Text style={{ color: "white", fontSize: 15 }}>Neem een Foto</Text>
       </Button>
     </View>
   )
@@ -145,6 +266,7 @@ export const MapScreen = ({ navigation }) => {
   const [momdata, setMomdata] = useState("")
   const [data, setData] = useState([]);
   const [locatie, setLocatie] = useState("loading")
+
 
   //Data inladen
   dataInladen(setData);
@@ -365,15 +487,14 @@ const styles = StyleSheet.create({
   detailPaginaVanMapView: {
     alignSelf: "center",
     backgroundColor: "black",
-    padding: 10,
+    padding: 7,
     borderWidth: 1,
     borderColor: "white",
     borderStyle: "solid",
     borderRadius: 25,
-    marginTop: 10
   },
   detailPaginaTitle: {
-    fontSize: 20,
+    fontSize: 14,
     marginLeft: 10,
     marginTop: 25,
     borderBottomColor: 'black',
@@ -381,22 +502,26 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   detailPaginaTitle2: {
-    fontSize: 20,
+    fontSize: 14,
     marginLeft: 10,
     marginRight: 15,
     marginTop: 15,
     borderBottomColor: 'black',
     borderBottomWidth: 1,
-
-
   },
   detailPaginaText: {
-    fontSize: 20,
+    fontSize: 14,
     marginLeft: 10,
     color: "black",
     borderBottomColor: 'black',
     borderBottomWidth: 1
   },
+  imageDetailPagina: {
+    padding: 10,
+    width: "90%",
+    height: 120,
+    alignSelf: "center",
+  }
 
 
 });
