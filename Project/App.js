@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import React, { useEffect, useState, useRef } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity, TextInput, Image } from 'react-native';
+=======
+import React, { useEffect, useState, Image , useRef} from 'react';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, TextInput } from 'react-native';
+>>>>>>> ffad5e55ce1c15e58227ad334ca0cbfa47a88546
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -132,7 +137,11 @@ const SaveFavo = async (props) => {
 
 export const Favo = ({ navigation }) => {
   const [data, setData] = useState([]);
+<<<<<<< HEAD
   const [data1, setData1] = useState([]);
+=======
+  const [visible, setVisible] = useState(true);
+>>>>>>> ffad5e55ce1c15e58227ad334ca0cbfa47a88546
 
   dataInladen(setData);
 
@@ -197,9 +206,43 @@ export const Favo = ({ navigation }) => {
     )
   }
 }
+<<<<<<< HEAD
+=======
+ 
+
+>>>>>>> ffad5e55ce1c15e58227ad334ca0cbfa47a88546
 
 //Functie Detail knop map
 export const DetailMapButton = ({ route, navigation }) => {
+  const [visible, setVisible] = useState(true);
+
+  const [cameraon, setCameraOn] = useState(false);
+  const [image, setImage] = useState();
+  const camera = useRef();
+
+  const takePicture = async() => {
+    let picture = await camera.current.takePictureAsync();
+
+    setImage(picture.uri)
+    console.log(image)
+  } 
+
+  const [hasPermission, setHasPermission] = useState(null);
+  useEffect(() => {
+  (async () => {
+  const { status } = await Camera.requestPermissionsAsync();
+  setHasPermission(status === 'granted');
+  })();
+  }, []);
+
+  const cameraFun = () => {
+    return(
+      <View>
+        <Camera style={{ flex: 1 }} type={Camera.Constants.Type.back} ref={camera}/>
+        <Button title="Maak een foto" onPress={takePicture}/>
+     </View> 
+    )
+  }
 
   const [data1, setData1] = useState(null);
   const [showbutton, setShowbutton] = useState(true);
@@ -233,7 +276,11 @@ export const DetailMapButton = ({ route, navigation }) => {
   return (
     <View style={styles.detailPaginaVanMap}>
       <View style={styles.detailPaginaVanMapView}><Text style={{ color: "white", fontSize: 20 }}>{route.params.data.Naam}</Text></View>
+<<<<<<< HEAD
       {data1 !== null ? <Image source={{ uri: data1 }} style={styles.imageDetailPagina} resizeMode="stretch" /> : null}
+=======
+      {image && <Image source={{uri: image}} style={{position: "absolute", alignSelf:'stretch' , width: "100", height:"20"}} />}
+>>>>>>> ffad5e55ce1c15e58227ad334ca0cbfa47a88546
       <TextInput style={styles.detailPaginaTitle} editable={false} value={'Naam'} />
       <Text style={styles.detailPaginaText}>{route.params.data.Naam}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Adres'} />
@@ -244,9 +291,18 @@ export const DetailMapButton = ({ route, navigation }) => {
       <Text style={styles.detailPaginaText} >{route.params.data.Buslijnen}</Text>
       <TextInput style={styles.detailPaginaTitle2} editable={false} value={'Tramlijnen'} />
       <Text style={styles.detailPaginaText} >{route.params.data.Tramlijnen}</Text>
+
       <Button style={styles.detailPaginaVanMapView}
-        onPress={() => { SaveFavo(route.params.data) }} >
-        <Text style={{ color: "white", fontSize: 15 }}>Voeg toe aan favorieten</Text>
+        onPress={() => {cameraFun}} >
+         <Text style={{ color: "white", fontSize: 15 }}>Maak een foto</Text>
+      </Button>
+
+      <Button style={styles.detailPaginaVanMapView}
+        onPress={() => { SaveFavo(route.params.data) , setVisible(visible => !visible)}} >
+          {visible ?
+        <Text style={{ color: "white", fontSize: 15 }}>Voeg toe aan favorieten</Text> :
+        <Text style={{ color: "white", fontSize: 15 }}>Verwijder van favorieten</Text>
+          }
       </Button>
       <Button style={styles.detailPaginaVanMapView}
         onPress={() => { DeleteFavorieten() }} >
